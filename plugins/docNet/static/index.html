@@ -1,0 +1,130 @@
+<div class="doc-net-main">
+	<div class="title"><h4 class="title-text">{{LNG['docNet.meta.title']}}</h4></div>
+	<div class="net-container after-clear">
+		{{if loading == '1'}}
+		<p class="desc grey-normal">{{LNG['explorer.loading']}}</p>
+		{{else if !id || !meta}}
+		<p class="desc grey-normal">{{LNG['docNet.ui.siteError']}}!</p>
+		{{else if  !meta.netDomain}}
+		<div class="content-main">
+			<div class="kui-btn kui-btn-blue" data-action="clientEdit">{{LNG['docNet.ui.startOption']}}</div>
+			<p class="desc grey-normal">id: {{id}}/{{kodID}}}</p>
+		</div>
+		{{else}}
+		<% netUseAll = window._.isEmpty(netUseAll) ? {netUseIn:0,netUseOut:0,netUse:0}:netUseAll;%>
+		<div class="card-box col-xl-12 col-sm-6 col-lg-4">
+			<div class="card-main">
+				<div class="card-title">
+					<i class="font-icon ri-shield-flash-fill label-blue-normal"></i>
+					<span class="title-text">{{LNG['docNet.ui.status']}}</span>
+					<div class="kui-btn plugin-option" data-action="pluginOption" 
+						title="{{LNG['docNet.plugin.option']}}" title-timeout="100">
+						<i class="font-icon ri-edit-line"></i>
+					</div>					
+					<div class="kui-btn" data-action="clientEdit" title="{{LNG['docNet.net.option']}}" title-timeout="100">
+						<i class="font-icon ri-settings-line-3"></i>
+					</div>
+				</div>
+				<div class="card-body">
+					<%
+						var addStyle = meta.netDisable == '1' ? ['is-disable']:[''];
+						if(meta.netSpaceTotal - netUseAll.netUse < 0){
+							addStyle.push('is-net-empty');
+						}
+						if(window.time() - meta.netTimeout <= 0){
+							addStyle.push('is-net-timeout');
+						}
+						addStyle = addStyle.join(' ');
+						var addText  = _error || '';
+						if(addText){addText = '<em>'+addText+'</em>';}
+					%>
+					{{if meta.netRun == '1'}}
+					<div class="card-type-icon after-clear is-running">
+						<div class="status-icon font-icon ri-check-line label-green-normal"></div>
+						<div class="status-text">
+							<div class="status-text-title">{{LNG['docNet.ui.statusRunning']}}</div>
+							<div class="kui-btn kui-btn-grey" data-action="clientStop">
+								<i class="font-icon ri-stop-mini-fill"></i>{{LNG['docNet.ui.stop']}}
+							</div>
+							<div class="kui-btn kui-btn-grey action-restart" data-action="clientRestart"
+								title="{{LNG['docNet.ui.reStart']}}" title-timeout="100">
+								<i class="font-icon ri-restart-line"></i>
+							</div>
+						</div>
+					</div>
+					{{else}}
+					<div class="card-type-icon after-clear is-stopped {{addStyle}}">
+						<div class="status-icon font-icon ri-cloud-off-line label-grey-normal"></div>
+						<div class="status-text">
+							<div class="status-text-title">{{LNG['docNet.ui.statusStop']}}{{@addText}}</div>
+							<div class="kui-btn kui-btn-blue" data-action="clientStart">
+								<i class="font-icon ri-play-fill"></i>{{LNG['docNet.ui.start']}}
+							</div>
+						</div>
+					</div>
+					{{/if}}
+				</div>
+				<div class="card-footer can-select can-right-menu">
+					<div class="desc">{{LNG['docNet.ui.linkLocal']}}: 
+						<a href="{{localHost}}" target="_blank">{{localHost}}</a>
+						<span class="kui-btn" data-action="copyLink">{{LNG['explorer.copy']}}</span>
+					</div>
+					<div class="desc">{{LNG['docNet.ui.linkOut']}}: 
+						{{if linkOut}}
+						<a href="{{linkOut}}" target="_blank">{{linkOut}}</a>
+						<span class="kui-btn" data-action="copyLink">{{LNG['explorer.copy']}}</span>
+						{{else}}{{LNG['docNet.ui.linkEmpty']}}{{/if}}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<% var _size = window.pathTools.fileSize;%>
+		<div class="card-box col-xl-12 col-sm-6 col-lg-4">
+			<div class="card-main">
+				<div class="card-title">
+					<i class="font-icon ri-earth-line label-green-normal"></i>
+					<span class="title-text">{{LNG['docNet.ui.netUse']}}</span>					
+					<div class="kui-btn net-log" data-action="clientNetLog"
+						title="{{LNG['docNet.ui.netUseTitle']}}" title-timeout="100">
+						<i class="font-icon ri-line-chart-line"></i>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="card-type-value after-clear">
+						<div class="content">
+							<div class="value-show">
+								{{if meta.netSpaceTotal - netUseAll.netUse <= 0}}0
+								{{else}}
+								{{_size(meta.netSpaceTotal - (netUseAll.netUse || 0))}}
+								{{/if}}
+							</div>
+							<div class="value-text">{{LNG['docNet.ui.useHas']}}</div>
+						</div>
+						<div class="detail">
+							<div class="text-item">
+								<b>{{LNG['docNet.ui.useToday']}}:</b>{{_size(netUseToday.netUse)}} 
+								(<i class="font-icon ri-arrow-up-line"></i>{{_size(netUseToday.netUseIn)}},
+								<i class="font-icon ri-arrow-down-line"></i>{{_size(netUseToday.netUseOut)}})
+							</div>
+							<div class="text-item">
+								<b>{{LNG['docNet.ui.useAll']}}:</b>{{_size(netUseAll.netUse)}} 
+								(<i class="font-icon ri-arrow-up-line"></i> {{_size(netUseAll.netUseIn)}},
+								 <i class="font-icon ri-arrow-down-line"></i> {{_size(netUseAll.netUseOut)}})
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer can-select can-right-menu">
+					<div class="desc">{{LNG['docNet.net.netUserName']}}:{{name}}</div>
+					<div class="desc">ID:{{id}} / {{kodID}}</div>
+				</div>
+			</div>
+		</div>
+		{{/if}}
+	</div>
+	<div class="info-alert info-alert-blue p-10 align-left can-select can-right-menu">
+		<div class="mb-15 font-bold">{{LNG['docNet.ui.tipsTitle']}}:</div>
+		{{@LNG['docNet.ui.tipsContent']}}
+	</div>
+</div>

@@ -1,0 +1,38 @@
+<?php 
+$config['database'] = array (
+  'DB_TYPE' => 'sqlite3',
+  'DB_NAME' => USER_SYSTEM.'xbSyRH9eiD6c.php',
+  'DB_SQL_LOG' => true,
+  'DB_FIELDS_CACHE' => true,
+  'DB_SQL_BUILD_CACHE' => false,
+);
+$config['cache']['sessionType'] = 'file';
+$config['cache']['cacheType'] = 'file';
+// $GLOBALS['config']['settings']['language'] = 'en';
+$GLOBALS['config']['settingSystemDefault']['desktopFolder'] = 'desktop';
+$GLOBALS['config']['settingDefault'] = array(
+    'listType'            => "icon",        // 文件列表模式  列表|图标|分栏 ==> list||icon||split
+    'listSortField'        => "name",        // 排序字段  文件名|文件大小|扩展名|最后修改时间  ==> name||size||ext||mtime
+    'listSortOrder'        => "up",        // 升序降序  默认升序 up||down
+    'fileIconSize'        => "80",        // 图标模式图标大小
+    'animateOpen'        => "1",            // 界面动画动画,默认开启
+    'soundOpen'            => "0",            // 操作音效
+    'theme'                => "metro_green",        // 默认主题; app theme [mac,win7,win10,metro,metro_green,alpha]
+    'wall'                => "8",            // 默认壁纸
+    "fileRepeat"        => "replace",    // 同名文件默认处理方式: 同时保留,替换,跳过 ==> rename,replace,skip
+    "recycleOpen"        => "1",            // 是否开启回收站  1 | 0 代表是否开启
+    'resizeConfig'        =>              // 列表模式不同字段宽度初始值
+        '{"filename":250,"filetype":80,"filesize":80,"filetime":215,"editorTreeWidth":200,"explorerTreeWidth":200}'
+);
+
+$config['database'] = array (
+  'DB_TYPE' => 'mysqli',
+  'DB_NAME' => 'u582393656_kodbox',
+  'DB_HOST' => '127.0.0.1',
+  'DB_PORT' => 3306,
+  'DB_USER' => 'u582393656_kodbox',
+  'DB_PWD' => '2U=y8o0E^;',
+  'DB_SQL_LOG' => true,
+  'DB_FIELDS_CACHE' => true,
+  'DB_SQL_BUILD_CACHE' => false,
+);

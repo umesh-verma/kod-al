@@ -1,0 +1,91 @@
+
+.after-clear:after{clear: both;float: none;content: "";display: block;}
+.doc-net-main .net-container{padding:10px 0;min-height: 230px;}
+.doc-net-main .title .title-text{
+	border-bottom: 0.5px solid #a0a0a040;
+    padding: 0px 0 10px 0;
+}
+.doc-net-main .net-container .card-box{padding:0;margin:0;}
+.doc-net-main .net-container .card-main{
+	padding:8px 15px 5px 15px;background:#dddddd10;
+	background:linear-gradient(150deg, #9c27b003, #03a9f407);
+    margin:0 15px 15px 0;border-radius: 6px;
+	box-shadow: 0 0 0 1px #8ea9bf30, 3px 3px 0 1px #8ea9bf30;
+    transition: all 0.2s;
+	white-space: nowrap;overflow: hidden;
+}
+.doc-net-main .net-container .card-main:hover{
+	box-shadow: 0 0 0 1px #8ea9bf40, 5px 5px 0 1px #8ea9bf40;
+    border-color:#8ea9bf40;
+}
+.doc-net-main .net-container .card-main .card-title{
+	font-weight: 600;line-height: 30px;
+    margin-bottom: 15px;padding-bottom: 6px;
+	border-bottom: 0.5px solid #a0a0a040;
+}
+.doc-net-main .net-container .card-main .card-title .kui-btn{
+	position: absolute;right: 30px;padding: 2px 4px;
+}
+.doc-net-main .net-container .card-main .card-title .kui-btn.plugin-option{right:65px;}
+.doc-net-main .net-container .card-main .card-title .kui-btn .font-icon{margin: 0;line-height: 22px;}
+.doc-net-main .net-container .card-main .card-title .font-icon{
+	border-radius: 20px;display: inline-block;
+    width: 20px;height: 20px;font-size: 13px;
+    line-height: 20px;margin-right: 3px;
+    position: relative;top: -2px;
+}
+
+.doc-net-main .net-container .card-main .card-type-icon .status-icon{
+	border-radius: 100px;display: inline-block;margin-top:5px;
+    width: 72px;height: 72px;font-size: 42px;line-height: 70px;float: left;
+}
+.doc-net-main .net-container .card-main .card-type-icon .kui-btn{margin:2px 0 0px 0;padding:6px 12px;}
+.doc-net-main .net-container .card-main .card-type-icon.is-running .status-icon{background: #57c22d;}
+.doc-net-main .net-container .card-main .card-type-icon .status-text{
+	float: left;margin-left: 10px;
+    padding:3px 10px 10px 10px;max-width: 60%;
+}
+.doc-net-main .net-container .card-main .card-type-icon .status-text .status-text-title{
+	font-size: 24px;font-weight: 200;
+}
+.doc-net-main .net-container .card-main .card-type-icon .status-text .status-text-title em{
+	font-size: 12px;display: block;
+    font-style: normal;font-weight: normal;
+    padding-bottom: 2px;color: #FF5722;
+}
+
+.doc-net-main .net-container .card-main .card-type-value .content{
+	float: left;display: block;width: 40%;text-align: center;    
+    color: #1890ff;background: #1890ff20;
+	background: linear-gradient(150deg, #af4c5514, #218af33d);
+    height: 84px;border-radius: 4px;
+}
+
+.doc-net-main .net-container .card-main .card-type-value .value-show{font-size: 30px;margin-top: 10px;}
+.doc-net-main .net-container .card-main .card-type-value .value-text{    
+	color: #949494;padding: 0 5px;
+    text-overflow: ellipsis;overflow: hidden;
+}
+.doc-net-main .net-container .card-main .card-type-value .detail{
+	width: 60%;float: left;
+    white-space: nowrap;color: #1890ff;
+}
+.doc-net-main .net-container .card-main .card-type-value .detail .text-item{margin: 0px 0px 5px 10px;}
+.doc-net-main .net-container .card-main .card-type-value .detail .text-item .font-icon{font-size:12px;color:#c3c3c3;}
+.doc-net-main .net-container .card-main .card-type-value .detail b{display: block;color:#888;}
+
+
+.doc-net-main .net-container .card-main .card-footer{
+	margin-top: 15px;padding: 5px 0 5px 0;line-height: 24px;
+    border-top: 0.5px solid #a0a0a040;color: #aaa;
+}
+.doc-net-main .net-container .card-main .card-footer .kui-btn{
+    padding: 1px 8px;position: relative;top:1px;
+	display: inline;border: none;
+}
+
+.doc-net-main .net-container .card-main .card-footer a{text-decoration: none;padding: 4px 6px;border-radius: 3px;}
+.doc-net-main .net-container .card-main .card-footer a:hover{background: #d6edff;}
+.info-alert hr{margin-top: 10px;margin-bottom: 10px;border-top: 1px solid #a0a0a040;}
+
+#doc-net-log-chart{position: absolute;top: 0;left: 0;right: 0;bottom: 0;}

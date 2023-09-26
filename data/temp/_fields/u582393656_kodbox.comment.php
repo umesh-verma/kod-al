@@ -1,0 +1,30 @@
+<?php 
+ return array (
+  0 => 'commentID',
+  1 => 'pid',
+  2 => 'userID',
+  3 => 'targetType',
+  4 => 'targetID',
+  5 => 'content',
+  6 => 'praiseCount',
+  7 => 'commentCount',
+  8 => 'status',
+  9 => 'modifyTime',
+  10 => 'createTime',
+  '_autoinc' => true,
+  '_pk' => 'commentID',
+  '_type' => 
+  array (
+    'commentID' => 'bigint(20) unsigned',
+    'pid' => 'bigint(20) unsigned',
+    'userID' => 'bigint(20) unsigned',
+    'targetType' => 'smallint(5) unsigned',
+    'targetID' => 'bigint(20) unsigned',
+    'content' => 'text',
+    'praiseCount' => 'int(11) unsigned',
+    'commentCount' => 'int(11) unsigned',
+    'status' => 'tinyint(3) unsigned',
+    'modifyTime' => 'int(11) unsigned',
+    'createTime' => 'int(11) unsigned',
+  ),
+);

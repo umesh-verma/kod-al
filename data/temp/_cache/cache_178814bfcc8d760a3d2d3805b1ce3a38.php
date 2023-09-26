@@ -1,0 +1,1 @@
+<?php exit;?>s:172:"{"type":"url","value":"https://www.desmos.com/calculator/noanuckuli","icon":"desmos.png","options":{"width":"90%","height":"80%","simple":0,"resize":1,"openType":"dialog"}}";

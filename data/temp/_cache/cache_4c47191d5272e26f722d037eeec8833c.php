@@ -1,0 +1,1 @@
+<?php exit;?>s:263:"{"type":"url","icon":"oexe.png","value":"https://chat.bitnbyte.in/","options":{"name":"","value-url":"https://chat.bitnbyte.in/","value-path":"","value-js":"","pathType":"folder","ext":"","openType":"dialog","width":"80%","height":"70%","resize":"1","simple":""}}";

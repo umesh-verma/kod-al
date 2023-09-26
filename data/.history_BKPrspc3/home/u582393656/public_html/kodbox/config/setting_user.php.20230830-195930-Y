@@ -1,0 +1,24 @@
+<?php 
+$config['database'] = array (
+  'DB_TYPE' => 'sqlite3',
+  'DB_NAME' => USER_SYSTEM.'xbSyRH9eiD6c.php',
+  'DB_SQL_LOG' => true,
+  'DB_FIELDS_CACHE' => true,
+  'DB_SQL_BUILD_CACHE' => false,
+);
+$config['cache']['sessionType'] = 'file';
+$config['cache']['cacheType'] = 'file';
+// $GLOBALS['config']['settings']['language'] = 'en';
+$GLOBALS['config']['settingSystemDefault']['desktopFolder'] = 'desktop';
+
+$config['database'] = array (
+  'DB_TYPE' => 'mysqli',
+  'DB_NAME' => 'u582393656_kodbox',
+  'DB_HOST' => '127.0.0.1',
+  'DB_PORT' => 3306,
+  'DB_USER' => 'u582393656_kodbox',
+  'DB_PWD' => '2U=y8o0E^;',
+  'DB_SQL_LOG' => true,
+  'DB_FIELDS_CACHE' => true,
+  'DB_SQL_BUILD_CACHE' => false,
+);

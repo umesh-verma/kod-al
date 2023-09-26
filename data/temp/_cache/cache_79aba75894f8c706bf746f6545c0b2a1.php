@@ -1,0 +1,1 @@
+<?php exit;?>s:267:"{"type":"url","icon":"oexe.png","value":"https://bitnbyte.in/snappy/","options":{"name":"","value-url":"https://bitnbyte.in/snappy/","value-path":"","value-js":"","pathType":"folder","ext":"","openType":"dialog","width":"80%","height":"70%","resize":"1","simple":""}}";

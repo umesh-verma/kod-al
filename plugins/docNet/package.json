@@ -1,0 +1,23 @@
+{
+	"id":"docNet",
+	"name":"{{LNG['docNet.meta.name']}}",
+	"title":"{{LNG['docNet.meta.title']}}",
+	"version":"1.16",
+	"source":{
+		"className":"font-icon ri-global-line bg-blue-5"
+	},
+	"category":"tools",
+	"description":"{{LNG['docNet.meta.desc']}}",
+	"auther":{
+		"copyright":"kodcloud.",
+		"homePage":"https://www.kodcloud.com"
+	},
+	"configItem":{
+		"pluginAuthOpen":{
+			"type":"switch",
+			"value":1,
+            "className":"hidden"
+		},
+		"text":"{{LNG['docNet.meta.name']}}, <a class='btn btn-success mr-10' link-href='#admin/setting/net' target='_blank'>setting</a>"
+	}
+}

@@ -1,0 +1,1 @@
+<?php exit;?>a:2:{s:8:"listSort";a:1:{i:6;s:7:"name:up";}s:8:"listType";a:3:{s:16:"{userShareLink}/";s:7:"icon:80";i:9;s:7:"icon:96";i:6;s:4:"list";}}

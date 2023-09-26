@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title><?php echo LNG("minder.title");?></title>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="theme-color" content="#d89000">
+        <link rel="icon" href="<?php $this->url('static/images/icon.svg');?>" sizes="any" type="image/svg+xml">
+		<?php $this->link('static/mind-map/css/chunk-vendors.css');?>
+		<?php $this->link('static/mind-map/css/app.css');?>
+		<?php $this->link('static/app/style.css');?>
+		<?php $this->link('style/lib/font-icon/style.css','static');?>
+    </head>
+    
+    <body>
+        <div id="app"></div>
+        <script>
+			var kodSdkConfig = {api:'<?php echo APP_HOST;?>',pluginApi:"<?php echo $this->pluginApi;?>"};
+			var FILE_INFO = {
+				fileUrl:	'<?php echo clear_quote($fileUrl);?>',	// 获取url
+				fileName: 	'<?php echo clear_quote($fileName);?>', // 文件名
+				savePath:	'<?php echo clear_quote($savePath);?>', // 文件路径;有则可以直接保存;没有且canWrite则可以另存为;
+				canWrite:	'<?php echo clear_quote($canWrite);?>'	// 是否可写; 可写才能编辑;
+			};
+			var appLang = '<?php echo I18n::getType();?>';
+			var appTitle= '<?php echo LNG("minder.title");?>';
+			window.externalPublicPath = '<?php echo $this->pluginHost."static/mind-map/";?>'
+			window.takeOverApp = true;
+			window.LNG = <?php echo json_encode(I18n::getAll());?>;
+        </script>
+		
+		<?php $this->link('app/dist/sdk.js','static');?>
+		<?php $this->link('static/mind-map/js/chunk-vendors.js');?>
+		<?php $this->link('static/mind-map/js/app.js');?>
+		<?php $this->link('static/app/iconSearch.js');?>
+		<?php $this->link('static/app/page.js');?>
+        <script>
+			var appLang = '<?php echo I18n::getType();?>';
+			var appLangMap = {'zh-CN':'zh','zh-TW':'zh','en':'en'};
+			var mindOptions = {
+				lang:appLangMap[appLang] || 'en',
+				data:{
+					root: {data:{text:"NODE"},children: []},
+					theme: {template:"classic2",config: {}},
+					layout: "mindMap", //mindMap,logicalStructure
+					config: {},
+					view: null,
+				},
+				localConfig:{
+			    	isZenMode: false, // 是否是禅模式
+			    	openNodeRichText: true,// 是否开启节点富文本
+			    	useLeftKeySelectionRightKeyDrag: false,// 左键选择右键拖拽;or反向
+			    },
+			};
+			window.takeOverAppMethods = {
+				getMindMapData:function(){return mindOptions.data;},
+				saveMindMapData:function(data){},
+				getLanguage:function(){return mindOptions.lang;},
+				saveLanguage:function(lang){;},
+				getLocalConfig:function(){return mindOptions.localConfig;},
+				saveLocalConfig:function(config){},
+			};
+			window.onload = function(){
+				if(!window.takeOverApp) return;
+				window.mindMapApp = window.initApp();
+				window.$bus.$on('app_inited',function(mindMap){window.mindMap = mindMap;});
+			};
+        </script>
+    </body>
+</html>
