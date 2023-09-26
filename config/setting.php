@@ -209,7 +209,7 @@ $config['defaultPlugins'] = array(
 $config['settingSystemDefault'] = array(
 	'systemPassword'	=> rand_string(20),
 	'systemName'		=> "Orient Dots",
-	'systemDesc'		=> "——可道云.资源管理器",
+	'systemDesc'		=> "Orient Dots Dekstop",
 	'systemNameType' 	=> 'text',// image/text
 	'systemLogo' 		=> './static/images/common/logo.png',
 	'systemLogoMenu' 	=> './static/images/common/logo-kod.png',
@@ -224,10 +224,10 @@ $config['settingSystemDefault'] = array(
 	'globalCss'			=> "",
 	'globalHtml'		=> "",
 
-	'newUserApp'		=> "高德地图,icloud",
-	'newUserFolder'		=> "我的文档,我的图片,我的音乐",
-	'newGroupFolder'	=> "共享资源,文档,其他",	// 新建分组默认建立文件夹
-	'groupRootName'		=> '企业网盘',				// 企业组织架构根节点
+	'newUserApp'		=> "icloud",
+	'newUserFolder'		=> "Documents,Pictures,Music",
+	'newGroupFolder'	=> "Shared,Document,Other",	// 新建分组默认建立文件夹
+	'groupRootName'		=> 'Network Disk',				// 企业组织架构根节点
 	
 	'versionType'		=> "A",			// 版本
 	'rootListUser'		=> 0,			// 组织架构根节点展示群组内用户
