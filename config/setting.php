@@ -229,7 +229,7 @@ $config['settingSystemDefault'] = array(
 	'newGroupFolder'	=> "Shared,Document,Other",	// 新建分组默认建立文件夹
 	'groupRootName'		=> 'Network Disk',				// 企业组织架构根节点
 	
-	'versionType'		=> "Ts",			// 版本
+	'versionType'		=> "T",			// 版本
 	'rootListUser'		=> 0,			// 组织架构根节点展示群组内用户
 	'rootListGroup'		=> 0,			// 组织架构根节点展示子群组
 	'groupAuthOuther'   => 1, 			// 子部门网盘文档可授权给外部部门或成员,
