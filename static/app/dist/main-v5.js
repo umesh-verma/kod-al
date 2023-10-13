@@ -1,7 +1,7 @@
 var UpdateView = ClassBase.extend({
 	versionDev:{version:"1.44",build:'07'},         // 开发环境
 	versionRelease:{version:"1.44",build:'07'},     // 推送版本
-	versionReleaseAll:{version:"1.44",build:'07'},  // 稳定大版本;针对企业授权客户;
+	versionReleaseAll:{version:"1.44",build:'01'},  // 稳定大版本;针对企业授权客户;
 	// releaseBefore: 1.43.01 1.44.07
 
 	statusLink:'https://api.kodcloud.com/?state/index',
