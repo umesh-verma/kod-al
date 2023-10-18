@@ -4,4 +4,5 @@
 	$app = new Application();
 	$app->setDefault('user.index.index');
 	$app->run();
+ echo "-";
 ?>
