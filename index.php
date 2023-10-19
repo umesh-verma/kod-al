@@ -4,5 +4,10 @@
 	$app = new Application();
 	$app->setDefault('user.index.index');
 	$app->run();
+<<<<<<< Updated upstream
  echo "-";
 ?>
+=======
+	echo "--";
+?>
+>>>>>>> Stashed changes
