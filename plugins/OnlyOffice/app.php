@@ -79,7 +79,7 @@ class OnlyOfficePlugin extends PluginBase {
                     'name' => Session::get('kodUser.nickName').' ('.Session::get('kodUser.name').')',
                 ],
                 'customization' => [
-                    'autosave' => true,
+                    'autosave' => false,
                     'chat' => strpos($config['editorOpt'],'chat') !== false? true: false,
                     'commentAuthorOnly' => true,
                     'comments' => strpos($config['editorOpt'],'comments') !== false? true: false,
