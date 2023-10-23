@@ -14,7 +14,7 @@ class OnlyOfficePlugin extends PluginBase {
 
     }
     public function index() {
-        echo $path = $this->filePath($this->in['path']);
+        $path = $this->filePath($this->in['path']);
         $fileUrl = $this->filePathLinkOut($this->in['path']);
         $fileName = $this->fileInfo['name'];
         $fileExt = get_path_ext($this->fileInfo['name']);
