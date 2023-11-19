@@ -37,8 +37,8 @@
 <body>
 	<?php Hook::trigger('templateCommonContent');?>
 	<div id="app"></div>
-	
 	<style>
+		
 		.bg-black{background:#333;}
 		.loading-body div{
 			position:fixed;margin:auto;left:0;top:0;right:0;bottom:0;max-width:64px;
@@ -62,12 +62,61 @@
 		var darkMode = theTheme == 'dark-mode' ? true: (theTheme == 'auto' && isDark); 
 		if(darkMode){document.getElementsByTagName('body')[0].setAttribute("class","bg-black");}
 	</script>
-	
+	  <div id="theme-modal" class="theme-modal">
+			<div class="theme-modal-content">
+			  <div class="theme-modal-header">
+				<span class="theme-close">&times;</span>
+				<h3><i class="font-icon ri-palette-fill"></i>  &nbsp;&nbsp;Custom Theme</h3>
+			  </div>
+			  <div class="theme-modal-body">
+				<div class="tab-group-pan">
+					<div class="tab-content theme-desktop">
+					   <div class="section">
+						  <div class="box">
+							<div class="theme-list" data-value="2" data-theme="default">
+								<div class="ico"><img class="theme-img" src="<?php linkHref('images/wall_page/2.jpg')?>"></div>
+								<div class="theme-info">Default</div>
+								<i class="font-icon ri-check-line item-select"></i>
+							 </div>
+							 <div class="theme-list" data-value="1" data-theme="jungle">
+								<div class="ico"><img class="theme-img" src="<?php linkHref('images/theme/jungle.png')?>"></div>
+								<div class="theme-info">Jungle</div>
+								<i class="font-icon ri-check-line item-select"></i>
+							 </div>
+							 <div class="theme-list" data-value="3" data-theme="sea">
+								<div class="ico"><img class="theme-img" src="<?php linkHref('images/theme/sea.png')?>"></div>
+								<div class="theme-info">Sea</div>
+								<i class="font-icon ri-check-line item-select"></i>
+							 </div>
+							 
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div class="flex-list"></div>
+							 <div style="clear:both;"></div>
+						  </div>
+					   </div>
+					</div>
+				 </div> <!---end here -->
+			  </div>
+			</div>
+		  </div>
 	<link href="<?php linkHref('style/lib/main.css');?>" rel="stylesheet" />
 	<link href="<?php linkHref('style/dist/main.css');?>" rel='stylesheet' />
+	<link href="<?php linkHref('style/dist/theme.css');?>" rel='stylesheet' />
 	<script src="<?php linkHref('app/vender/es3-profill.js');?>"></script>
 	<script src="<?php linkHref('app/dist/vendor.js');?>"></script>
 	<script src="<?php linkHref('app/dist/main.js');?>"></script>
+	<script src="<?php linkHref('app/dist/themechanger.js');?>"></script>
 	<?php Hook::trigger('templateCommonFooter');?>
 </body>
 </html>
