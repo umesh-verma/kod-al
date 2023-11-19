@@ -22,7 +22,7 @@ class filterPost extends Controller{
 	// 一律post请求; get请求白名单; 插件处理;
 	public function check(){
 		if( Model('SystemOption')->get('csrfProtect') != '1') return;
-		$ua = strtolower($_SERVER ['HTTP_USER_AGENT']);
+		$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
 		if( strstr($ua,'kodbox') || 
 			strstr($ua,'okhttp') ||
 			strstr($ua,'kodcloud')
@@ -38,13 +38,19 @@ class filterPost extends Controller{
 			$GLOBALS['config']['jsonpAllow'] = true;
 			return; //插件内部自行处理;
 		}
+		
+		// webdav 挂载kod; 当前开启了csrf防护,直接接口上传时不处理;
+		if($theACT == 'fileupload'){
+			if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){exit;}
+			if(isset($_POST['clientFrom']) && $_POST['clientFrom'] =='webdav-kodbox'){return;}
+		}
 
 		$allowGetArr = array(
 			'explorer.fileview'	=> 'index',
 			'explorer.history'	=> 'fileOut',
 			'explorer.index'	=> 'fileOut,fileDownload,fileOutBy,fileDownloadRemove',
 			'explorer.share'	=> 'file,fileOut,fileDownload,zipDownload,fileDownloadRemove',
-			'admin.setting'		=> 'get,set,server',
+			'admin.setting'		=> 'get,server',
 			'admin.repair'		=> '*',
 
 			'install.index'	 	=> '*',

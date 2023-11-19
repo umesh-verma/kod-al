@@ -231,6 +231,9 @@ class explorerIndex extends Controller{
 		$fileID   = _get($fileInfo,'fileInfo.fileID',_get($fileInfo,'fileID'));
 		Cache::remove($cacheKey);
 		if($fileInfo['sourceID']){Model('Source')->metaSet($fileInfo['sourceID'],'modifyTimeShow',time());}
+		if(_get($fileInfo,'metaInfo.user_sourceCover')){ // 清空缩略图,包含清空文件设定的封面;
+			Model('Source')->metaSet($fileInfo['sourceID'],'user_sourceCover');
+		}
 		if($fileID){Model("File")->metaSet($fileID,'fileInfoMore',null);};
 		show_json(LNG('explorer.success'));
 	}
@@ -657,17 +660,7 @@ class explorerIndex extends Controller{
 		    del_dir($dir);
 		}
 	}
-
-	private function tmpZipName($dataArr){
-		$files = array();
-		foreach($dataArr as $item){
-			$info	 = IO::info($item['path']);
-			$files[] = IOArchive::tmpFileName($info);
-		}
-		sort($files);
-		return md5(json_encode($files));
-	}
-
+	
 	public function clearCache(){
 		$maxTime = 3600*24;
 		$list = IO::listPath(TEMP_FILES);
@@ -694,15 +687,14 @@ class explorerIndex extends Controller{
 		}
 		
 		ignore_timeout();
-		$zipFolder = $this->tmpZipName($dataArr);
-		$zipCache  = TEMP_FILES;mk_dir($zipCache);
-
-		$zipPath = Cache::get($zipFolder);
+		$zipFolder = md5(json_encode(sort(array_to_keyvalue($dataArr,'','path'))));
+		$zipCache  = TEMP_FILES.$zipFolder.'/';
+		mk_dir($zipCache);file_put_contents($zipCache.'index.html','');
+		$zipPath   = Cache::get($zipFolder);
 		if($zipPath && IO::exist($zipPath) ){
 			return $this->zipDownloadStart($zipPath);
 		}
-
-		$zipPath = $this->zip($zipCache.$zipFolder . '/');
+		$zipPath = $this->zip($zipCache);
 		Cache::set($zipFolder, $zipPath, 3600*6);
 		$this->zipDownloadStart($zipPath);
 	}
@@ -731,11 +723,11 @@ class explorerIndex extends Controller{
 
 			if(!$isFolder){
 				$itemZipOut['filePath'] = $itemZip['path'];
-				$itemZipOut['size'] = $pathInfo['size'];				
+				$itemZipOut['size'] = $pathInfo['size'];
 				$result[] = $itemZipOut;continue;
 			}
 			$result[] = $itemZipOut;
-			$children = IO::listAllSimple($itemZip['path']);
+			$children = IO::listAllSimple($itemZip['path'],1);
 			$result   = array_merge($result, $children);
 		}
 		return $result;
@@ -781,11 +773,11 @@ class explorerIndex extends Controller{
 		}
 		return $task;
 	}
-	private function taskUnzip($data){
+	private function taskUnzip($path){
 		$defaultID = 'unzip-'.USER_ID.'-'.rand_string(8);
 		$taskID = $this->in['longTaskID'] ? $this->in['longTaskID']:$defaultID;
 		$task = new TaskUnzip($taskID,'zip');
-		$task->addFile($data['path']);
+		$task->addFile($path);
 	}
 	
 	/**
@@ -801,9 +793,9 @@ class explorerIndex extends Controller{
 		
 		$repeat = Model('UserOption')->get('fileRepeat');
 		$repeat = !empty($this->in['fileRepeat']) ? $this->in['fileRepeat'] :$repeat;
-		$this->taskUnzip($data);
-		IOArchive::unzip($data,$repeat);
-		show_json(LNG('explorer.unzipSuccess'));
+		$this->taskUnzip($data['path']);
+		$result = IOArchive::unzip($data['path'],$data['pathTo'],$data['unzipPart'],$repeat);
+		show_json($result ? LNG('explorer.unzipSuccess'):LNG('explorer.error'),!!$result,$result);
 	}
 
 	/**
@@ -814,10 +806,10 @@ class explorerIndex extends Controller{
 			'path' => array('check' => 'require'),
 			'index' => array('check' => 'require', 'default' => '-1'),
 			'download' => array('check' => 'require', 'default' => false),
-			'name' => array('check' => 'require', 'default' => ''),
 		));
-		$this->taskUnzip($data);
+		$this->taskUnzip($data['path']);
 		$list = IOArchive::unzipList($data);
+		$this->updateLastOpen($data['path']);
 		show_json($list);
 	}
 
@@ -829,17 +821,18 @@ class explorerIndex extends Controller{
 	public function fileOut(){
 		$path = $this->in['path'];
 		if(!$path) return; 
-		$isDownload = isset($this->in['download']) && $this->in['download'] == 1;
+		$isDownload   = isset($this->in['download']) && $this->in['download'] == 1;
+		$downFilename = !empty($this->in['downFilename']) ? $this->in['downFilename'] : false;
 		if($isDownload && !Action('user.authRole')->authCanDownload()){
 			show_json(LNG('explorer.noPermissionAction'),false);
 		}
-		if ($isDownload) Hook::trigger('explorer.fileDownload', $path);
-		Hook::trigger('explorer.fileOut', $path);
+		if($isDownload){Hook::trigger('explorer.fileDownload', $path);}
+		Hook::trigger('explorer.fileOut',$path);
 		if(isset($this->in['type']) && $this->in['type'] == 'image'){
 			$info = IO::info($path);
 			$imageThumb = array('jpg','png','jpeg','bmp');
 			$width = isset($this->in['width']) ? intval($this->in['width']) :0;
-			if(!$width || $width >= 2000){
+			if($isDownload || !$width || $width >= 2000){
 				$this->updateLastOpen($path);
 			}
 			if($info['size'] >= 1024*200 &&
@@ -848,9 +841,10 @@ class explorerIndex extends Controller{
 			){
 				return IO::fileOutImage($path,$width);
 			}
+			return IO::fileOut($path,$isDownload,$downFilename); // 不再记录打开时间;
 		}
 		$this->updateLastOpen($path);
-		IO::fileOut($path,$isDownload);
+		IO::fileOut($path,$isDownload,$downFilename);
 	}
 	/*
 	相对某个文件访问其他文件; 权限自动处理;支持source,分享路径,io路径,物理路径;

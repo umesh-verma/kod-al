@@ -18,7 +18,7 @@ class explorerAuth extends Controller {
 		parent::__construct();
 		$this->isShowError = true; //检测时输出报错;
 		$this->actionPathCheck = array(
-			'show'		=> array("explorer.list"=>'path'),
+			'show'		=> array("explorer.list"=>'path,listAll'),
 			'view'		=> array(
 				'explorer.index'=>'fileOut,fileOutBy,fileView,fileThumb',
 				'explorer.editor' =>'fileGet'
@@ -288,6 +288,11 @@ class explorerAuth extends Controller {
 
 		$pathInfo = IO::infoAuth($parse['pathBase']);
 		Hook::trigger("explorer.auth.can",$pathInfo,$action);
+		// 个人私密空间是否登录检测;
+		if($pathInfo && isset($pathInfo['sourceID']) && $pathInfo['targetType'] == 'user'){
+			$userSafeCheck = Action('explorer.listSafe')->authCheck($pathInfo,$action);
+			if($userSafeCheck){return $this->errorMsg($userSafeCheck,1101);}
+		}
 		// source 类型; 新建文件夹 {source:10}/新建文件夹; 去除
 		//文档类型检测：屏蔽用户和部门之外的类型；
 		if($this->allowRootSourceInfo($pathInfo)) return true;

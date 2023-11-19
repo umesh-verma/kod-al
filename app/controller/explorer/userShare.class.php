@@ -12,10 +12,8 @@ class explorerUserShare extends Controller{
 		parent::__construct();
 		$this->model  = Model('Share');
 	}
-
-	/**
-	 * 通过文档获取分享；没有则返回false;
-	 */
+		
+	// 通过文档获取分享；没有则返回false;
 	public function get(){
 		$path = Input::get('path','require');
 		$pathParse = KodIO::parse($path);
@@ -45,15 +43,10 @@ class explorerUserShare extends Controller{
 		$shareInfo = $shareInfo ? $shareInfo : _get($shareList,rtrim($item['path'],'/'));
 		$shareInfo = $shareInfo ? $shareInfo : _get($shareList,rtrim($item['path'],'/').'/');
 		if(!$shareInfo) return $item;
-		$item['sourceInfo']['shareInfo'] = array(
-			'shareID' 		=> $shareInfo['shareID'],
-			'shareHash' 	=> $shareInfo['shareHash'],
-			'shareSource'	=> $shareInfo['sourceID'],
-			'isLink' 		=> $shareInfo['isLink'],
-			'isShareTo' 	=> $shareInfo['isShareTo'],
-			'timeTo' 		=> $shareInfo['timeTo'],
-			'options'		=> $shareInfo['options'],
-		);
+		
+		$picker = 'shareID,shareHash,createTime,sourceID,userID,shareSource,isLink,isShareTo,timeTo,options';
+		if($shareInfo['isLink']=='1'){$picker.=',numDownload,numView';}
+		$item['sourceInfo']['shareInfo'] = array_field_key($shareInfo,explode(',',$picker));
 		return $item;
 	}
 
@@ -77,6 +70,7 @@ class explorerUserShare extends Controller{
 			$sourceArray = array_to_keyvalue($sourceArray,'sourceID');
 		}
 		$notExist = array();
+		$sourceCountGroup = 0;$sourceCountIO = 0;
 		foreach ($shareList['list'] as $shareItem) {
 			$shareItem = $this->shareItemParse($shareItem);
 			// 物理路径,io路径;
@@ -102,24 +96,33 @@ class explorerUserShare extends Controller{
 				continue;
 			}
 			$result[$key][] = $info;
+			if(!$info['sourceID']){$sourceCountIO++;}
+			if($info['groupParentLevel']){$sourceCountGroup++;}
 		}
 		// if($notExist){$this->model->remove($notExist);}// 自动清除不存在的分享内容;
 		
 		// 对自己和部门内容进行分组;
 		$result['groupShow'] = array(
-			array(
+			'selfData' => array(
 				'type' 	=> 'selfData',
 				'title' => LNG('explorer.pathGroup.shareSelf'),
-				"filter"=> array('groupParentLevel'=>'_null_')
+				"filter"=> array('groupParentLevel'=>'_null_','sourceID'=>'')
 			),
-			array(
+			'groupData' => array(
 				'type'	=> 'groupData',
 				'title'	=> LNG('explorer.pathGroup.shareGroup'),
-				"filter"=> array('groupParentLevel'=>'')
+				"filter"=> array('groupParentLevel'=>'','sourceID'=>'')
+			),
+			'ioData' => array(
+				'type'	=> 'ioData',
+				'title'	=> LNG('admin.storage.localStore').'/IO',
+				"filter"=> array('sourceID'=>'_null_')
 			),
 		);
 		$length = count($result['folderList']) + count($result['fileList']);
-		if($length <= 3){unset($result['groupShow']);}	
+		if($sourceCountGroup == 0){unset($result['groupShow']['groupData']);}
+		if($sourceCountIO == 0){unset($result['groupShow']['ioData']);}
+		if($length <= 3 || count($result['groupShow']) <= 1){unset($result['groupShow']);}
 		return $result;
 	}
 	
@@ -323,6 +326,7 @@ class explorerUserShare extends Controller{
 	 * 去除无关字段；处理parentLevel，pathDisplay
 	 */
 	public function _shareItemeParse($source,$share){
+		if(!$source || !is_array($source)){return false;}
 		$share = $this->shareItemParse($share);
 		$sourceBefore = $source;
 		$user = Model('User')->getInfoSimpleOuter($share['userID']);
@@ -361,7 +365,10 @@ class explorerUserShare extends Controller{
 		$displayUser = '['.$userName.']'.LNG('common.share').'-'.$sourceRoot['name'];
 		if($share['userID'] == USER_ID){
 			$displayUser = $sourceRoot['name'];
-			$source['sourceInfo']['selfShareInfo'] = $sourceRoot;
+			$picker = 'shareID,shareHash,createTime,shareSource,isLink,isShareTo,timeTo,options,numDownload,numView';
+			$shareInfoAdd = array_field_key($share,explode(',',$picker));
+			$source['sourceInfo']['selfShareInfo'] = array_merge($sourceRoot,$shareInfoAdd);
+			if(!$pathAdd){$source['sourceInfo']['shareInfo'] = $share;}
 		}
 		if($sourceRoot['targetType'] == 'group'){
 			$source['sharePathFrom'] = $sourceRoot['pathDisplay'];
@@ -430,6 +437,7 @@ class explorerUserShare extends Controller{
 	public function add(){
 		$data = $this->_getParam('sourceID');
 		$pathParse = KodIO::parse($data['path']);
+		$this->checkRoleAuth($data['isLink'] ? 'shareLink':'shareTo');
 		
 		// 物理路径,io路径;
 		$data['sourcePath'] = KodIO::clear($data['path']);
@@ -452,6 +460,7 @@ class explorerUserShare extends Controller{
 	 */
 	public function edit(){
 		$data = $this->_getParam('shareID');
+		$this->checkRoleAuth($data['isLink'] ? 'shareLink':'shareTo');
 		$shareInfo = $this->model->getInfo($data['shareID']);
 		$this->checkSetAuthAllow($data['authTo'],$shareInfo['sourceInfo']);
 		$result = $this->model->shareEdit($data['shareID'],$data);
@@ -470,6 +479,18 @@ class explorerUserShare extends Controller{
 			$authBoth = $selfAuth | intval($authInfo['auth']);
 			if($authBoth == $selfAuth) continue;
 			show_json(LNG('admin.auth.errorAdmin'),false);
+		}
+	}
+	
+	private function checkRoleAuth($shareType){
+		if($GLOBALS['isRoot']){return;}
+		$canShareTo   = Action('user.authRole')->authCan('explorer.share');
+		$canShareLink = Action('user.authRole')->authCan('explorer.shareLink');
+		if($shareType == 'shareTo' && !$canShareTo){
+			show_json(LNG('explorer.noPermissionAction'),false,1004);
+		}
+		if($shareType == 'shareLink' && !$canShareLink){
+			show_json(LNG('explorer.noPermissionAction'),false,1004);
 		}
 	}
 	
@@ -546,6 +567,7 @@ class explorerUserShare extends Controller{
 	
 	public function removeShare($shareInfo,$shareType){
 		$shareID = $shareInfo['shareID'];
+		$this->checkRoleAuth($shareType == 'shareTo' ? 'shareTo':'shareLink');
 		if($shareType == 'shareTo'){
 			$data = array('isShareTo'=>0,'authTo'=>array(),'options'=>$shareInfo['options']);
 			if (isset($data['options']['shareToTimeout'])) unset($data['options']['shareToTimeout']);

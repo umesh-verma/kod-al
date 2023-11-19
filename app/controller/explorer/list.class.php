@@ -68,11 +68,24 @@ class explorerList extends Controller{
 		//回收站追加物理/io回收站;
 		Action('explorer.recycleDriver')->appendList($data,$pathParse);
 		Action('explorer.listGroup')->appendChildren($data);
+		Action('explorer.listSafe')->appendSafe($data);
 		
 		$this->pathListParse($data);// 1000 => 50ms; all-image=200ms;
 		$this->pageReset($data);
 		$this->addHistoryCount($data,$pathParse);
-	}	
+	}
+	
+	// 拉取所有(用于文件夹同步,对比等情况)
+	// IO::listAll($this->in['path']);// path:默认为真实路径;包含sourceInfo时sourceInfo.path为真实路径;
+	public function listAll(){
+		$page		= isset($this->in['page']) ? intval($this->in['page']):1;
+		$pageNum 	= isset($this->in['pageNum']) ? intval($this->in['pageNum']):2000;
+		$page = $page <= 1 ? 1:$page;$pageNum = $pageNum <= 1000 ? 1000:$pageNum;		
+
+		$list = IO::listAllSimple($this->in['path'],0);// path:包含上层文件夹名的路径;filePath:真实路径;
+		$data = array_page_split($list,$page,$pageNum);
+		show_json($data);
+	}
 	
 	// 桌面文件夹自动检测;不存在处理;
 	private function checkDesktop($path){
@@ -294,12 +307,14 @@ class explorerList extends Controller{
 		if(!$pathInfo) return false;
 		static $showMd5 		= false; // 大量文件夹文件内容时,频繁调用性能优化;
 		static $explorerFav 	= false;
+		static $explorerTag 	= false;
 		static $explorerShare 	= false;
 		static $explorerTagGroup= false;
 		static $explorerDriver 	= false;
 		static $modelAuth 		= false;
 		if(!$explorerFav){
 			$explorerFav 		= Action('explorer.fav');
+			$explorerTag 		= Action('explorer.tag');
 			$explorerShare 		= Action('explorer.userShare');
 			$explorerTagGroup 	= Action('explorer.tagGroup');
 			$explorerDriver 	= Action('explorer.listDriver');
@@ -308,8 +323,9 @@ class explorerList extends Controller{
 			$showMd5 			= Model('SystemOption')->get('showFileMd5') != '0';
 		}
 
-		if(defined('USER_ID')){
+		if(USER_ID){
 			$explorerFav->favAppendItem($pathInfo);
+			$explorerTag->tagAppendItem($pathInfo);
 			$explorerShare->shareAppendItem($pathInfo);
 			$explorerTagGroup->tagAppendItem($pathInfo);
 		}
@@ -346,7 +362,7 @@ class explorerList extends Controller{
 			if(isset($pathInfo['auth'])){
 				$pathInfo['canWrite'] = $modelAuth->authCheckEdit($pathInfo['auth']['authValue']);
 			}
-			if( is_array($pathInfo['metaInfo']) && 
+			if(is_array($pathInfo['metaInfo']) && 
 				isset($pathInfo['metaInfo']['systemLock']) && 
 				$pathInfo['metaInfo']['systemLock'] != USER_ID ){
 				$pathInfo['isWriteable'] = false;
@@ -363,6 +379,20 @@ class explorerList extends Controller{
 		}
 		if(isset($pathInfo['fileID'])){unset($pathInfo['fileID']);}
 		if(isset($pathInfo['fileInfo']['path'])){unset($pathInfo['fileInfo']['path']);}
+		$pathInfo = $this->pathInfoCover($pathInfo);
+		return $pathInfo;
+	}
+	
+	public function pathInfoCover($pathInfo){
+		// 文件文件夹封面; 自适应当前url;
+		if(is_array($pathInfo['metaInfo']) && $pathInfo['metaInfo']['user_sourceCover']){
+			$pathInfo['fileThumbCover'] = '1';
+			$pathInfo['fileThumb'] = $pathInfo['metaInfo']['user_sourceCover']; 
+			$urlInfo = parse_url($pathInfo['fileThumb']);$port = isset($urlInfo['port']) ? ':'.$urlInfo['port']:'';
+			$urlBase = $urlInfo['scheme']."://".$urlInfo['host'].$port.'/';
+			$pathInfo['fileThumb'] = str_replace($urlBase,HOST,$pathInfo['fileThumb']);
+			$pathInfo['metaInfo']['user_sourceCover'] = $pathInfo['fileThumb'];
+		}
 		if($pathInfo['type'] == 'file'){ // 仅针对文件; 追加缩略图等业务;
 			$pathInfo = Hook::filter('explorer.list.itemParse',$pathInfo);
 		}
@@ -424,7 +454,7 @@ class explorerList extends Controller{
 	
 	// 显示隐藏文件处理; 默认不显示隐藏文件;
 	private function parseDataHidden(&$data,$pathParse){
-		if(defined('USER_ID') && Model('UserOption')->get('displayHideFile') == '1') return;
+		if(Model('UserOption')->get('displayHideFile') == '1') return;
 		$pathHidden = Model('SystemOption')->get('pathHidden');
 		$pathHidden = explode(',',$pathHidden);
 		$hideNumber = 0;
@@ -516,6 +546,14 @@ class explorerList extends Controller{
 			TaskQueue::add('explorer.list.pathInfoMoreParse',$args,$desc,$key);
 		}
 		
+		// md5 未计算情况处理;(队列加入失败,执行退出或文件不存在等情况补充)
+		if($fileID && is_array($pathInfo['fileInfo']) && !$pathInfo['fileInfo']['hashMd5']){
+			$fileInfo = Model("File")->fileInfo($fileID);
+			$args = array($fileID,$fileInfo);
+			$desc = '[fileMd5]'.$fileID.';path='.$pathInfo['path'];
+			TaskQueue::add('FileModel.fileMd5Set',$args,$desc,'fileMd5Set'.$fileID);
+		}
+		
 		// 文件封面;
 		if(isset($pathInfo[$infoKey]) && isset($pathInfo[$infoKey]['fileThumb']) ){
 			$fileThumb = $pathInfo[$infoKey]['fileThumb'];
@@ -543,21 +581,36 @@ class explorerList extends Controller{
 		return $infoMore;
 	}
 	
+	// 获取文件内容, 存储在对象存储时不存在处理; 避免报错
+	private function pathGetContent($pathInfo){
+		if(!$pathInfo || !$pathInfo['path']){return "";}
+		$filePath = $pathInfo['path'];
+		if(isset($pathInfo['fileID'])){
+			$fileInfo = Model("File")->fileInfo($pathInfo['fileID']);
+			if(!$fileInfo || !$fileInfo['path']){return "";}
+			$filePath = $fileInfo['path'];
+		}
+		if(!IO::exist($filePath)){return "";}
+		return IO::getContent($filePath);
+	}
+		
 	/**
 	 * 追加应用内容信息;
 	 */
 	private function pathParseOexe(&$pathInfo){
 		$maxSize = 1024*1024*1;
 		if($pathInfo['ext'] != 'oexe' || $pathInfo['size'] > $maxSize) return $pathInfo;
+		if($pathInfo['size'] == 0) return $pathInfo;
 		if(isset($pathInfo['oexeContent'])) return $pathInfo;
 
 		// 文件读取缓存处理; 默认缓存7天;
 		$pathHash = KodIO::hashPath($pathInfo);
 		$content  = Cache::get($pathHash);
 		if(!$content){
-			$content = IO::getContent($pathInfo['path']);
+			$content = $this->pathGetContent($pathInfo);
 			Cache::set($pathHash,$content,3600*24*7);
 		}
+		
 		if(!is_string($content) || !$content) return $pathInfo;
 		$pathInfo['oexeContent'] = json_decode($content,true);
 		if( $pathInfo['oexeContent']['type'] == 'path' && 
