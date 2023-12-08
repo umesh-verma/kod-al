@@ -93,23 +93,24 @@ class videoResize {
 			($fileSizeMin > 0.01 &  $fileInfo['size'] < 1024 * 1024 * $fileSizeMin) ){
 			return self::STATUS_IGNORE;
 		}
+		if($this->convertError($taskID)){return self::STATUS_ERROR;} // 上次转换失败缓存记录;
 		
 		$command = $plugin->getFFmpeg();
 		if(!$command || !function_exists('proc_open') || !function_exists('shell_exec')){
-			$this->convertError($taskID,LNG('fileThumb.video.STATUS_ERROR').'(3501)');
+			$this->convertError($taskID,LNG('fileThumb.video.STATUS_ERROR').'(3501)',600);
 			return self::STATUS_ERROR;//Ffmpeg 软件未找到，请安装后再试
 		}
 		if(!$this->convertSupport($command)){
-			$this->convertError($taskID,'ffmpeg not support libx264; please repeat install'.'(3502)');
+			$this->convertError($taskID,'ffmpeg not support libx264; please repeat install'.'(3502)',600);
 			return self::STATUS_ERROR;//Ffmpeg 转码解码器不支持;
 		}
 		
 		// 过短的视频封面图,不指定时间;
 		$localFile = $plugin->localFile($path);
 		if(Cache::get($taskID) == 'error'){return self::STATUS_ERROR;}; //是否已经转码
-		if( !$localFile ){
+		if(!$localFile ){
 			Cache::set($taskID,'error',60);
-			$this->convertError($taskID,'localFile move error!'.'(3503)');
+			$this->convertError($taskID,'localFile move error!'.'(3503)',60);
 			return self::STATUS_IGNORE;
 		}
 		
@@ -215,7 +216,7 @@ class videoResize {
 		$this->convertClear($fileInfo['taskID']);
 		
 		$runError  = true;
-		$errorTips = 'Run error!';
+		$errorTips = 'Run error!';$cacheTime = 3600;
 		if( preg_match("/(Error .*)/",$output,$match) || 
 			preg_match("/(Unknown encoder .*)/",$output,$match) ||
 			preg_match("/(Invalid data found .*)/",$output,$match) ||
@@ -239,12 +240,12 @@ class videoResize {
 			}
 			IO::remove($destPath,false);
 			$this->log('[end] '.$fileInfo['name'].'; move error; '.$logTime.$logEnd);
-			$errorTips = 'Move temp file error!';
+			$errorTips = 'Move temp file error!';$cacheTime = 60;
 		}
 		
 		@unlink($tempPath);
 		Cache::set($fileInfo['taskID'],'error',5);
-		$this->convertError($fileInfo['taskID'],$errorTips);
+		$this->convertError($fileInfo['taskID'],$errorTips,$cacheTime);
 		$logAdd = $runError ? "\n".trim($output) : '';
 		$this->log('[end] '.$fileInfo['name'].';'.$errorTips.'; '.$logTime.$logAdd.$logEnd);
 		$this->log('[end] '.$output);
@@ -293,11 +294,13 @@ class videoResize {
 			$count ++;
 		}
 	}
-	private function convertError($taskID,$content=""){
+	private function convertError($taskID,$content="",$cacheTime=0){
 		$key = 'fileThumb-videoResizeError-'.$taskID;
 		if($content === -1){return Cache::remove($key);}
 		if(!$content){return Cache::get($key);}
-		Cache::set($key,$content,600);
+		
+		if(!$cacheTime){$cacheTime = 3600*24*3;}
+		Cache::set($key,$content,$cacheTime);
 	}
 	private function convertSupport($ffmpeg){
 		$out = shell_exec($ffmpeg.' -v 2>&1');

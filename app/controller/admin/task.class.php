@@ -27,8 +27,18 @@ class adminTask extends Controller {
 			$result[$key]['userInfo'] = $userArr[$value['userID']];
 		}
 		
+		// 后台任务运行状态;
+		$taskInfo = false;
+		if($GLOBALS['isRoot']){
+			$taskInfo = array(//status,running,lastRun,delay
+				'autoTask' 			=> AutoTask::valueGet(false), 
+				'taskQueue'			=> TaskQueue::count(),
+				'taskQueueLastRun'	=> TaskQueue::lastTime(),
+				'taskQueueThread'	=> TaskQueue::threadCount(),
+			);
+		}
 		$result = array_slice($result,0,50);//最多50
-		show_json($result,true);
+		show_json($result,true,$taskInfo);
 	}
 	public function taskKillAll($userID=false){
 		$result  = Task::taskListUser($userID);

@@ -12,9 +12,9 @@ ClassBase.define({
             _this.$('.menuBar .menu-dropdown-user li.copyright-show').after(html);
         }
         if (type == 'login' && !_this.$('.login-form form .client-download').length) {
-            var html = '<div class="client-download">\
+            var html = '<span class="client-download">\
                     <a class="url-link" href="javascript:void(0);">'+LNG['client.down.client']+'</a>\
-                </div>';
+                </span>';
             _this.$('.login-form form').append(html);
         }
         var self = this;

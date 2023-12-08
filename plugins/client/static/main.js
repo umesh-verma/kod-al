@@ -14,26 +14,6 @@ kodReady.push(function(){
 		});
 	});
 
-	// 检测是否支持二进制上传;
-	var sendAsBinary = 0;
-	var uploadBindaryCheck = function(){
-		if(!_.get(window.G,'system.settings.upload')){return;}
-		if(!G.system.settings.upload.sendAsBinary){return;} // 默认关闭则不检测;
-		G.system.settings.upload.sendAsBinary = sendAsBinary;
-		var callback = function(data){
-			sendAsBinary = (data == '[ok]') ? 1 : 0;
-			G.system.settings.upload.sendAsBinary = sendAsBinary;
-		};
-		$.ajax({
-			url:API_URL('user/view/uploadBindaryCheck'),
-			type:"post",contentType:"text/html",data:'[uploadCheck]',
-			success:callback,error:callback,
-		});
-	};
-	Events.bind('user.optionLoadAfter',uploadBindaryCheck);
-	uploadBindaryCheck(); //首次执行
-	
-	
 	// web端已登录,App登录界面,可以通过扫码登录App(web端个人中心-二维码)
 	requireAsync(staticPath+'style.css');
 	ClassBase.extendHook({
@@ -202,21 +182,20 @@ kodReady.push(function(){
 		hookMatch:'login,bindAutoLogin,autoSetAccount,loginSuccess',	
 		bindEvent:function(){
 			this.__bindEvent.apply(this,arguments);
-			if(G.clientOption.appLoginWeb == '0') return;
-			checkWebLoginBefore(this);
-			showLoginWebView(this);
 			showLoginTfaView(this);
+			if(G.clientOption.appLoginWeb == '1'){
+				checkWebLoginBefore(this);
+				showLoginWebView(this);
+			}
 		},
 		loginSuccess: function(){
 			var _this = this;
 			var _args = arguments;
 			// 判断是否需要二次验证，不需要则继续提交
-			needLoginTfa(function(result){
-				if (result.code === false) {
-					return _this.__loginSuccess.apply(_this,_args);
-				}
-				_this.tfaPage.showDialog(result.data);
-			});
+			if (this.withTfa || !_.has(tfaIn,'withTfa') || !_this.tfaPage) {
+				return _this.__loginSuccess.apply(_this,_args);
+			}
+			_this.tfaPage.needTfa(tfaIn,tfaInfo);
 		}
 	});
 		
@@ -334,7 +313,7 @@ kodReady.push(function(){
 		formData.tfaType = {
 			// "type":"radio",
 			"type":"checkbox",
-			"value":_.get(G,'system.options.tfaType') || "email",
+			"value":_.get(G,'system.options.tfaType') || "",
 			"display":LNG['client.tfa.tfaType'],
 			"desc":LNG['client.tfa.tfaTypeDesc'],
 			"info":{"email":LNG['client.tfa.email'],"phone":LNG['common.phoneNumber']}
@@ -344,25 +323,11 @@ kodReady.push(function(){
 	Events.bind('admin.setting.initViewAfter',function(_this){
 		if (!_this.$('.form-row.item-tfaOpen').length) return;
 		$('.form-row.item-needCheckCode').after($('.form-row.item-tfaOpen,.form-row.item-tfaType'));
+		if (_.get(G, 'kod.versionType') == 'A') {
+			$('.form-row.item-tfaType input[value=phone]').prop("checked", false).prop('disabled',true);
+		}
 	});
-	Events.bind('router.before',function(hash){
-		// 不需要登录或未登录时不检查——注意：更多登录方式会直接跳转
-		if (!Router.pageNeedLogin(hash) || !_.get(G, 'user.userID')) return;
 
-		needLoginTfa(function(result){
-			if (result.code === false) return;
-			// 跳转到登录页
-			var href = window.location.href;
-			var location = '&link='+urlEncode(href);
-			if( _.trim($.parseUrl().url,'#/ ')  == _.trim(href,'#/ ') ){
-				location = '';
-			}
-			// Router.go('user/login'+location);
-			window.location.href = G.kod.APP_HOST+'#/user/login'+location;
-			return false;
-		});
-		return;
-	});
 	// 登录页追加二次验证项；相较于router.after.user/login事件，这个只会触发一次，故不做重复拦截
 	var showLoginTfaView = function(_this) {
 		var callback = arguments[1] || null;
@@ -374,36 +339,21 @@ kodReady.push(function(){
 			callback && callback();
 		});
 	}
-	var needLoginTfa = function(callback) {
-		// 1.判断二次验证是否开启
-		var tfaOpen = _.get(G,'system.options.tfaOpen') || 0;
-		var tfaType = _.get(G,'system.options.tfaType') || '';
-		if (tfaOpen != '1' || !tfaType) {
-			return callback({code:false});
+	var tfaIn = null;
+	var tfaInfo = null;
+	Events.bind('RequestAfter[login]',function(result,param){
+		if (!result || !result.code) return;
+		// if (!_.has(result,'data.tfaOpen') && _.get(result,'info')) {
+		if (!_.get(result,'data.tfaOpen')) {
+			tfaIn = null; tfaInfo = null;
+			return;
 		}
-		// 2.判断是否已标记——已登录且已验证（不额外判断userID）
-		if (_.get(G, 'user.userID') && _.get(G,'user.tfa') === true) {
-			return callback({code:false});
-		}
-		// 3.判断当前用户是否需要验证
-		$.ajax({
-			url:G.kod.APP_HOST+'?plugin/client/tfa',
-			data:{action:'tfaInfo'},
-			type:'POST',dataType:'json',
-			success:function(result){
-				// 未登录：result.info == 10011
-				if (!result || !result.code) {
-					return callback({code:false});
-				}
-				var data = result.data;
-				if (data.isRoot || data.isTfa == 1) {
-					_.set(G,'user.tfa',true);
-					return callback({code:false});
-				}
-				callback({code:true,data:data});
-			}
-		});
-	}
+		tfaIn = param;
+		tfaInfo = result.data;
+	});
+	Events.bind('RequestBefore[login]',function(param){
+		param.withTfa = false;
+	});
 
 	if($.hasKey('plugin.client.event')) return;
 	// 客户端下载；js文件为异步加载，hook不能放在js文件中调用

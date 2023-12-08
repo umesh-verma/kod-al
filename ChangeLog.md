@@ -1,3 +1,222 @@
+## 1.48 version update
+> ** Mainly adding new **: picture video and other files to be optimized, detailed optimization ...
+> ** Published on: 2023.12.4 **
+
+-File management
+-In pictures, video and other file cover diagrams to generate plug -in optimization: List to remove the uniform processing, the unprepared content is added to the background conversion line, the picture file is forced to use the plug -in for conversion; the file is embedded in processing;
+-The background task team processing optimization, allowing up to three separate process processing of the background task queue (the number of queues, processes can be viewed in the task manager; open the new page to trigger the new processing task queue process))
+-Chand the domain name situation, the user information avatar link adaptive optimization in the file attribute information cache;
+-File attributes-clearing the shrinkage diagram, automatic cleaning the cache in the plug-in;
+-The folder display settings: When closing the narrowing diagram, no picture shrinkage diagram is displayed, the folder cover is not affected by this;
+-The user role sharing right-internal collaboration/external link sharing optimization: When there is internal collaboration without external chain sharing rights, it does not support the modification and deletion of the shared, and does not support new external link sharing;Writing and sharing permissions are the same;
+-In the private safe, the plug -in -calling zoom diagram is generated.
+-Punge forward, the current folder list automatically selects the last folder opened last time, and is positioned in a visual area (support: mobile browser forward and backward, external link sharing browsers forward and back)
+-In tag directory (the departmental public label, personal label), right -click menu Add the label screening function
+-List optimization of the mobile browser list mode: adaptive height, status meta icon, label and other display typeset optimization;
+-The mobile browser backward retreat to open adaptive optimization: open the dialog box and retreat (close/back); open the attribute dialog box (click to enter the directory, close/backstage);
+-File management: Lienzi department, supports setting as "only the left tree directory Liezi department" (only the left tree directory Liezi department, no file file folder; the file area does not Liezi department, only the file folder))
+-Che other optimization
+-An -time sharing management, internal collaboration in the list increases the increase of viewing and sharing objects
+-Arkdown File Playing optimization, calling the picture plug -in opening (editor; folder description; Markdown in external link sharing)
+-Che mobile browser optimization: tree directory icon optimization, address bar icon optimization, other detail style optimization; file attribute dialog box click the path, turn off the dialog box path jumping condition optimization optimization optimization optimization
+-Cope mobile terminal compatible processing: UC/quark browser under iOS, open the video in the compressed package (browser takes over the player), pull the file list CSRF_TOKEN verification abnormality after closing;
+-AccessStoken automatic login situation processing: The traceless mode is brought into the token automatic login processing, the token expires automatically withdrawn from the login; after exiting
+-Attacle optimization: customized file folder icon display optimization; mobile terminal style optimization; internal network penetration plug -in compatible dragon core version; network request add debugging mode (g.debug = 1;)
+-Ar third -party application uses KOD single -point login certification, login status follows the current account login status (automatically empty the login status cache after exiting)
+-Hang Mount Webdav and other network storage, video files online playback optimization (dragging on progress, download breakpoint continuation processing optimization)
+-In the optimization of the cover of the cover of the picture, video, and other files, add various RAW pictures shrinkage diagrams and online previews; the file list is to be generated immediately when the number of diagram is less than 3 years; automatically access the new background processing process when adding the queue to join the queue.
+-The external link access optimization, compatible with physical path too long
+	
+#### Bug Fixed
+-ONLYOFFICE plug -in Excel setting the unit password to request an abnormal condition to process
+
+
+## 1.47 version update
+> ** Mainly add **: Detail optimization ...
+> ** Published on: 2023.11.22 **
+
+-File management
+-PDF, Video and other files and other file shrinkage diagrams to generate performance optimization, and change to asynchronous background task queue generation (avoid excessive generating at the same time, resulting in the server stuck, each refresh will load the content of the contraction diagram)
+-The relative path file acquisition enhancement, support ../ Cross -level directory reference (Markdown introduced pictures; support: local, io, (source), sharelink, shareitem [local, IO, (source)])
+-An external chain sharing folder, when the Markdown file is embedded in the support of the relative path picture; support ../ Cross -level directory reference (must be shared in the external chain)
+-MINIO object storage interface adjustment and adaptation, compatible to the latest version of the Server side
+-OSS object storage interface adjustment and adaptation.
+-File folder connection URL simplified
+-The private space video and other file shrinkage diagrams to generate;
+-Che other optimization
+-Onflow external link sharing, close the folder packaging download, which affects the optimization of the preview of the compression package; the switch is only for external link sharing;
+-An system administrators to view the task manager, list the current background plan task execution status, and the background task queue is in state;
+-ONLYOFFICE optimization; watermark processing; opening of some systems of Window is to hold ALT to be abnormal;
+-Tinymce text editor upgrade, detail optimization
+-OEM package optimization: hardware authorization verification update; PC client synchronous settings in the middle version information hidden; first installation requires consent user protocol; download connection processing
+-The external chain sharing folder open upload and upload, upload optimization of large files;
+-IOS mobile phone side quark browser, file upload compatibility processing, file editing preservation upload compatibility processing (the browser FORM table string constructed file upload, the problem of the file content loss)
+-D detail optimization: mobile -end wealthy text editor toolbar optimization; onlyoffice adds XLSB file format to open support; dialog box opens the folder attribute, right -click optimization when discussing multiple choices;
+
+#### Bug Fixed
+-In the storage path of the object, when the file of the same name is set to be renamed, the configuration is not effective to handle (according to the default coverage)
+
+
+## 1.46 version update
+> ** Mainly add **: Detail optimization ...
+> ** Published on: 2023.11.08 **
+
+-File management
+-The file folder supports custom icons (the highest priority, adaptive current network URL processing);
+-The folder access, support the folder that the previously entered before the backward (when the current list exists, automatically locate and select)
+-Seize the mounting configuration (minio, OSS, FTP, Webdav, etc.), add the configuration item, whether to open the file shrinkage diagram (picture, video, PDF, flowchart, etc.)
+-D detail optimization: My external chain sharing entrance, the content of the content file attribute optimization of the content file;
+-On external link sharing folder optimization: Enter the upload file to be automatically selected; drag the folder upload support (support the empty folder);
+-Onch -text indexing plug -in optimization (turn off and close, correspond to the background service)
+-Watch the contents of all the folders are optimized and perfect (front -end compression packaging download/search (LOC, IO, Kod, external link sharing KOD and IO and LOCAL), follow -up PC -end two -way synchronous support)
+-WEBDAV mount KOD, Listall pulls all the list optimization (recursively processing is full pull);
+-WEBDAV mount KOD, file list file shrinkage diagram processing optimization (mount itself KOD, mount remote KOD; picture shrinkage diagram, filethumb, minder, drawio)
+-Che other optimization
+-Android mobile phone browser upload optimization, do not automatically enter the file selection (avoid excessive operation steps when using offline download);
+-In the opening of the IDM download and interception, the compression of the front end of the folder is compatible;
+-Bind the mailbox prompt optimization (modify to the default 5 days before prompting)
+-Aniu storage, storage settings to enable files and compatible processing;
+-Opt optimization: static variable user_id is not defined by PHP8 error processing (compatible situation processing, manually set login);
+-Itta: Display information optimization when reporting an error, which is convenient for positioning; cooperates with me to display the avatar when the organizer is displayed according to the organizational architecture; the external chain sharing search supports the browser to move forward and switch the search conditions;
+
+#### Bug Fixed
+-Fix: Share the personal space folder of the external chain, open the abnormal situation after the content search (the full text search does not affect); after the front of the front is closed, the download folder is compatible with abnormalities;
+-Store root directory settings to ordinary users can read and write permissions, choose the following content to compress, and the permissions judgment cannot be written;
+
+## 1.45 version update
+> ** Mainly added **: Online decompression optimization, detail optimization ...
+> ** Published on: 2023.10.23 **
+
+-File management
+-List mode Drag and dragging optimization: When dragging to the expanded folder, the mouse is highlighting the current folder when the file is on the file;
+-The external drag and dragging up to KOD, adaptive response scroll bar (can stop area stay, head-rolling up, bottom-rolling down);
+-The compression process optimization processing; new folder compression does not retain the top treatment; newly supports compression to the specified destination processing (support physical path, IO path)
+-Coltage and compression package preview optimization
+-Coltage treatment optimization: interface reconstruction, supporting various storage, supporting the preview of compressed packages in the compressed package (multi -level); cache processing, performance optimization;
+-Coltage ZIP large file optimization: When decompressing the internal file, process it by flowing, and no longer read all the memory to reduce memory occupation;
+-Lore -layer compression package preview optimization: remove the limitation of the file size; multi -layer URL optimization to parameter (replace the URL request, better performance); right -click the content of the content decompressing part;
+-The text file in the compressed package open optimization: request processing optimization, support large file opening; support refresh re -request; file name and path optimization;
+-The dialog box interface optimization: bind to the root object (avoid being released, the dialog box is turned on the folder, the zip is turned off and closed the release problem);
+-The compressed package preview attribute optimization: right -click the folder or root file attribute, support the display containing the number of sub -content quantity information;
+-The compression file embedded support (default embedded; zip file embedded in the external link sharing; page preview; submissive preview; text file preview; sub -compression package preview); title support custom width;
+-Prink theme settings: Built -in Windows/Mac two theme styles;
+-The built -in application support hidden
+-The other: Recent documents, ignore the content greater than the current time (content generated by the user by itself); the file shrinkage map access will not be updated and the last time is opened;
+-Che other optimization
+-On log output, optimization of the residential log output, support real -time progress display (support webpage output, and terminal output; terminal supports CURL request output); task execution general log output processing; data repair task log output processing;
+-On external link sharing: Download counting record optimization (only record the first request, multiple calculations once); video files, compression packs and other file preview display optimization when downloading only one request, multiple calculations);
+-The approval mobile -end style optimization;
+-The version release, the packing console adds the execution of the progress log;
+-Coded KOD with webdav, and the CSRF situation is compatible when uploading the direct pass;
+-D detail optimization: External chain sharing file Folder text file preservation prompt optimization; when file acquisition is obtained, Range is automatically modified according to the file size (avoid the problem that the error does not match the problem that causes abnormal requests);
+-We other optimization: Preview of the compression package, switch the page after the dialog box is turned off, then switch back and right -click to operate the abnormal problem processing; after the mobile side gesture, the operation menu is not responding to the problem;
+-The case of compatible parts does not support Fileter_var;
+-Windows server compatible optimization: compression package preview (7Z/RAR) Chinese file name encoding compatible; use the file cache to lock the lock optimization; some system FRP starts the error problem handling;
+-A login secondary verification optimization processing (only web support processing, web login to add authentication parameters)
+-The internet penetration, adaptive internal network processing compatible (SameSite)
+-The external link sharing folder, theme style and dark light mode, follow the user's user configuration;
+-WEBDAV mount, personal root directory blocks private safe;
+-Inval optimization: After the plug -in is updated, the Hook registration point is automatically updated (the plug -in is enabled and updated); it is not automatically enabled after the plug -in update is updated (the previous state is maintained, and the unrefined plug -in plug -in also adds the update mark))
+-S selection user optimization of the departmental document authority: When obtaining the list of the department does not include your own visible root directory, it shows external authorization (authorized to other departments);
+
+#### Bug Fixed
+-Add login situation Entry page output Cookie processing compatible; accesstoken; apitoken;
+-In the secondary verification, the user is prompted to be binding when the user is not bound or the mobile phone (input detection, no repeated processing is allowed);
+## 1.44 version update
+> ** Mainly added **: Private safe, separate administrators, separation of details ...
+> ** Published on: 2023.9.27 **
+
+-File management
+-In the search searches, support the submissive file of the subfolder folder. Remarks search
+-A physical path document supports setting label (label Label display/right -click label settings/attribute panel label display and settings/permissions; physical path/IO path/kod path/internal collaboration sharing; automatic cleaning when the physical path content does not exist)
+-The file delay calculation MD5, queue operation identity processing (avoid universal exit); when the picture file has not calculated MD5, the picture reduction diagram processing
+-The folder list: Sub -folder/folder quantity is excluded in the recycling station content;
+-Search optimization: record the final check whether the content of the search (without removal); check the content of the file type selection optimization after searching; the custom file type, keep the record after switching the page; batch search support at the same time search;
+-The full text search optimization: When searching the full text, you can't find the content to search again with a live search; the full text search search word replacement ([.-] replace it with " +" eg: 10.13-01 => 10 +13 +01)))
+-The department, join the "I have the authority" (entrance channel)
+-The file list Get OExe file content, file storage does not have compatible processing (avoid OSS and other storage errors)
+-S selection file, click behind the screen, the box selection needs to stay with the problem optimization;
+-The front -end packaging and compressed download compatible with the latest version of chrome, firefox uses blob mode by default
+-Staters from physical storage to KOD, copy and paste, cut and paste, data integrity processing, performance optimization; cut from Local to KOD progress processing (second transmission update)
+-Pl -click the file to select the processing optimization: Right -click on the check/drop -down menu/operating button, and the logic is consistent with the click on the file (the current is not selected, the current selection will remain unchanged)
+-The optimal of the built -in Office preview plug -in: The file resolution fails to switch automatically; when there is editing permissions and a corresponding editing plug -in, the page displays the editing button;
+-Chat the file folder/screen screenshot under PC; support Ctrl+V paste to the folder to support the user department to change the directory (only supporting the subdirectory before)
+-My cooperation & external chain sharing group display: distinguish between physical paths/personal documents/departmental documents.
+-The object storage operation optimization (minimize network requests as much as possible, do batch)
+-Cap the subfolder and information optimization (OSS batch to obtain all sub -content for statistics)
+-The object storage internal copying mobile optimization;
+-The object storage folder renames optimization (copy+delete)
+-Private safe
+-List display: Always at the forefront of the folder list (the system root directory of the same level as the individual space); not enabled/authorized/unauthorized;
+-Re root directory permissions: read only, not support: copy/shear/rename/drag;
+-A data security isolation: Search for personal space root directory does not search for the content of the private safe (need to log in to enter the internal search); recent documents, file classification excludes the content of the private safe;
+-Private space operation: Create a private space (the mobile phone number or mailbox is bound to find the password); the password is entered and maintained;
+-Sub -content permissions: Unable to share/collaborative sharing/collection/add label/send to desktop shortcut; you cannot search through user root directory; right -click and toolbar: root directory, sub -directory content content content, sub -directory content content
+-Amades in the background of the administrator to open the switch in the background (those who are not enabled after shutdown will no longer be visible); personal settings are hidden: folder display options-folder-hidden display-private safe;
+-Data processing: The calculation of personal space use includes; delete the user when deleted the user to the system recycling station processing (system administrator management processing)
+-The authority of the system administrator (open the separation of three powers)
+-Profold -user permissions editing permissions, splitting into user editing, and user permissions settings (character identity, department authority)
+-After opening the separation of three powers: The system administrator cannot set the user's role and the authority of the user's department (back -end authority judgment and default data coverage processing)
+-After opening the separation of three powers: The privileges of the system administrator department are removed, consistent with ordinary users, the front and back end authority is consistent with ordinary users (no privileges)
+-S edit authority -no settings role permissions: cannot be modified by the user's role; the authority of the user's department cannot be modified (can modify the user's department)
+-Set the role permissions, no editing permissions: the user information modification is automatically removed (information, status, the departments of the department modify or delete); only retain the character settings, the user's authority authority;
+-We part of plug -in limited shielding processing (Adminer, WebConsole)
+- Backstage management
+-The historical version number settings support;
+-Ap user department management: disable/enable operation, automatically expand and select nodes;
+-The background operation log, user information modification adds more data information;
+-On information acquisition, simplify the return information, avoid information leakage (search user, etc.), the back -end request and the user permissions show the complete user information;
+-The user and department information acquisition, authority processing (can only obtain the sub -department, sub -user; the department's configuration can be visible as the department);Cure
+-The role sharing right limit point: split into internal collaboration and external link sharing rights, handle alone (old data upgrade processing)
+-Store supports the setting "Settling Department of the Department": Right -click the entrance of the department (after setting up the user as the owner in the department, other departments remain unchanged; when selecting the editor user -set the user role as the department administrator)
+-Che other optimization
+-Cap to download the entrance to the general client and APP (login page)
+-Amailing verification, verification code optimization uses 6 digits (binding the mailbox to modify the mailbox, find the password, and modify the password)
+-Sested the API to add the saving marker parameter, the file dynamic distinguishes upload the new version and online editor;
+-D detail optimization: Get the folder containing the content of the sub -content, and then request the cache optimization process again;
+-The full text search plug -in compatible Windows environment;
+-Redis supports configuration database (default: select (0))
+-The task time estimation prompt processing: display "greater than 5 hours";
+-Apfacked optimization: File download and wait for the ACCESSTOKEN link; the file output with token without output cookies; compatible setting the situation of error logo;
+-D detail optimization: file attribute-download link download file compatibility optimization; file list group-folding status automatic record; icon mode display file folder introduction file size 0 does not display relevant information when the file size is 0;
+-Assword component, click on the display after clicking, and click the hidden again (input: input -Password analog password box input box; avoid using password to trigger the selection, prompt the password saving after operation)
+-The initial installation of the default language processing (the default new folder, installation light application ...)
+-The object storage for mandatory modification. When modifying, the password is compatible with compatibility
+-O optimization of security issues, and the system configuration preservation is also verified when the CSRF protection is turned on (preventing the administrator from being induced to set the request to set the system configuration)#### bug fixed
+- 右键菜单显示被挡住问题处理:对话框打开文件夹-文件属性,历史版本,item右键菜单层级在下层问题处理(右键菜单容器处理到body;)
+- 后台分享管理:多选取消分享异常情况处理;
+
+
+## 1.43 版本更新
+> **主要新增**: 思维导图插件,细节优化...  
+> **发布于: 2023.8.10**    
+
+- 文件管理
+	- 窗口关闭或切换,有未保存内容时提醒处理支持(上传未完成,kod子窗口iframe内,流程图等菜单入口编辑文件,流程图等对话框编辑文件)
+	- 文件历史版本,diff对比支持对应插件优先级打开(只支持文本的文件采用文本对比)
+	- 下载文件夹,子文件更新编辑后缓存处理优化(文件预览,文件下载全局处理加入最后修改时间; 自适应请求缓存及文件变更)
+	- alt+c 复制文件名+链接(同时支持粘贴到地址栏自动解析)
+	- 地址栏支持粘贴文件路径,自动跳转到文件夹并选中对应文件
+- 其他优化
+	- formMaker 字段值控制子字段依赖控制时显示处理优化(隐藏字段所有子字段都处理为隐藏,向下传递)
+	- 部门管理增加批量删除；第三方同步插件允许删除已禁用部门/用户；增加指定登录帐号字段；增加白名单过滤。
+	- 插件升级/安装/卸载,增加事件通知,方便插件自身针对性处理
+	- 其他细节: 用户头像字段长度兼容调整;解压缩转码调整;安装时fulltext索引兼容调整;cockpit存储提示优化;外链分享下载按钮加入到头部
+	- 其他细节等: 分页组件优化;外链分享编辑器打开超大文件,分页处理优化; 文件右键浏览器打开自适应文件名处理
+	- 内网穿透,内网自适应跨域请求时上传兼容处理(浏览器发送options接口会影响正常流程)
+- 思维导图插件
+	- 插件集成:文件打开处理; 文件保存(ctrl+s保存); 新建思维导图文件;
+	- 权限控制: 根据文件读写权限,外链分享等自适应只读模式;
+	- 文件缩略图: 编辑时生成, 文件列表展示,xmind缩略图解析展示(保存时追加svg图到zip结尾,解析标记);(smm,xmind,mind,km)
+	- 文件打开解析转换: xmind,km/smm/mind
+	- 插入图标贴纸支持网络搜索svg
+	- minder库优化:界面样式优化;保存加入封面图处理;xmind保存追加封面处理;
+	- 细节优化:关闭前提示-是否修改内容检测优化;移动端手势缩放优化;窗口大小变更时画布自适应处理;全屏退出全屏自适应画布;移动端界面优化...
+#### bug fixed
+- 部分服务器上传无反应情况兼容(老版本升级,上传等配置没有时并发数为0引起上传不了的情况处理)
+- ace编辑大文件时,分页切换过快时偶尔会跳到第一页问题处理(多个文件,多页切换)
+
+
 ## 1.42 版本更新
 > **主要新增**: 细节优化...  
 > **发布于: 2023.7.6**    
